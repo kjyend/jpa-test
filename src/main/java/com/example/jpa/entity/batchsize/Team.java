@@ -1,14 +1,17 @@
-package com.example.jpa.entity;
+package com.example.jpa.entity.batchsize;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter
 @Entity
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team {
     @Id
     @GeneratedValue
@@ -16,6 +19,7 @@ public class Team {
     private String name;
 
     @OneToMany(mappedBy = "team",cascade = CascadeType.ALL)
+    @BatchSize(size = 100)
     private List<User> users = new ArrayList<>();
 
     @Builder

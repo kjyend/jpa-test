@@ -1,6 +1,9 @@
 package com.example.jpa.service;
 
 import com.example.jpa.entity.batchsize.Team;
+import com.example.jpa.entity.fetchjoin.Owner;
+import com.example.jpa.entity.fetchjoin.Pet;
+import com.example.jpa.repository.PetRepository;
 import com.example.jpa.repository.TeamRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,48 +17,39 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.IntStream;
 
-@Transactional
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
-class TeamServiceTest {
+class PetServiceTest {
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private TeamRepository teamRepository;
-
+    private PetRepository petRepository;
     @BeforeEach
     public void setup(){
         IntStream.rangeClosed(1,10).forEach(i->{
-            Team team = new Team("team" + i);
+            Owner owner = new Owner("team" + i);
 
             IntStream.rangeClosed(1,3).forEach(j->{
-                team.addUser("user"+i+j);
+                owner.addPet("pet"+i+j);
+                Pet pet=new Pet("pet"+i+j,owner);
+                petRepository.save(pet);
             });
-            teamRepository.save(team);
+
         });
     }
     @AfterEach
     public void cleanAll(){
-        teamRepository.deleteAll();
+        petRepository.deleteAll();
     }
-    
     @Test
     @DisplayName("N+1문제 생성")
     void test(){
         em.flush();
         em.clear();
         System.out.println("------------ POST 전체 조회 요청 ------------");
-        List<Team> teams = teamRepository.findAll();
-        System.out.println("------------ POST 전체 조회 완료. [1번의 쿼리 발생]------------\n\n");
-
-        System.out.println("------------ POST에 달린 comment 내용 조회 요청 [조회된 POST의 개수(N=10) 만큼 추가적인 쿼리 발생]------------");
-        teams.forEach(team -> {
-            team.getUsers().forEach(user -> {
-                System.out.println("이름 : "+user.getName());
-            });
-        });
-
-        System.out.println("------------ POST에 달린 comment 내용 조회 완료 ------------\n\n");
+        petRepository.findAll();
     }
 }

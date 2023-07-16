@@ -1,12 +1,13 @@
-package com.example.jpa.entity;
+package com.example.jpa.entity.batchsize;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
     @GeneratedValue
