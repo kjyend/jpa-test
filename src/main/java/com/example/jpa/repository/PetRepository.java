@@ -9,6 +9,6 @@ import java.util.List;
 public interface PetRepository extends JpaRepository<Pet,Long> {
 
     @Override
-    @Query("select p from Pet p join fetch p.owner")
+    @Query("select DISTINCT p from Pet p join fetch p.owner")
     List<Pet> findAll();
 }

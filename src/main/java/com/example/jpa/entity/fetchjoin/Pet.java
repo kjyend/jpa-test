@@ -1,15 +1,11 @@
 package com.example.jpa.entity.fetchjoin;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Entity
 public class Pet {
     @Id
@@ -18,10 +14,11 @@ public class Pet {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
+    @Builder
     public Pet(String name, Owner owner) {
         this.name = name;
         this.owner = owner;
